@@ -13,6 +13,7 @@ requires 'namespace::autoclean' => 0;
 
 test_requires 'Test::More'      => 0;
 test_requires 'JSON'            => 0;
+test_requires 'Data::Serializer::JSON' => 0;
 test_requires 'Moose'           => 0;
 
 WriteAll;

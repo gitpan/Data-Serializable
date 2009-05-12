@@ -2,3 +2,5 @@ Revision history for Data-Serializable
 
 0.01    2009-05-12
         Initial release.
+0.02	2009-05-12
+	Fixed missing dependency for testing. Data::Serializer::JSON
