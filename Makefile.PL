@@ -1,9 +1,9 @@
-use inc::Module::Install 0.87;
+use inc::Module::Install 0.95;
 
 name     'Data-Serializable';
-all_from 'lib/Data/Serializable.pm';
 author   'Robin Smidsrød <robin@smidsrod.no>';
 license  'perl';
+all_from 'lib/Data/Serializable.pm';
 
 requires 'Carp'                 => 0;
 requires 'Class::MOP'           => 0;

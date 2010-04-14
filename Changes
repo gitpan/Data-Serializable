@@ -1,6 +1,13 @@
 Revision history for Data-Serializable
 
-0.01    2009-05-12
-        Initial release.
+0.03	2010-04-14
+	Added minimum perl version (used Perl::MinimumVersion)
+	Updated to Module::Install 0.95
+	More JSON tests.
+	Fixed bug when trying to deserialize undef.
+
 0.02	2009-05-12
 	Fixed missing dependency for testing. Data::Serializer::JSON
+
+0.01    2009-05-12
+        Initial release.

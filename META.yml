@@ -3,6 +3,7 @@ abstract: 'Moose-based role that adds serialization support to any class'
 author:
   - 'Robin Smidsrød <robin@smidsrod.no>'
 build_requires:
+  Data::Serializer::JSON: 0
   ExtUtils::MakeMaker: 6.42
   JSON: 0
   Moose: 0
@@ -10,7 +11,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.87'
+generated_by: 'Module::Install version 0.95'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -26,6 +27,7 @@ requires:
   Moose::Role: 0
   Storable: 0
   namespace::autoclean: 0
+  perl: 5.6.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01
+version: 0.03

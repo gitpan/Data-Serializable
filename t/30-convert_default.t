@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 5;
+use Test::Exception;
 
 package MyClass;
 use Moose;
@@ -20,3 +21,11 @@ my $hash_conv = $obj->deserialize($obj->serialize($hash));
 is( $str_conv, $str, 'string serialization/deserialization fails' );
 is_deeply( $array_conv, $array, 'arrayref serialization/deserialization fails' );
 is_deeply( $hash_conv, $hash, 'hashref serialization/deserialization fails' );
+
+# Handle conversion of undef via Storable
+my $nothing = undef;
+my $nothing_conv = $obj->deserialize($obj->serialize($nothing));
+is( $nothing_conv, $nothing, 'undef serialization/deserialization fails');
+
+# Make sure deserializing undef returns undef
+lives_ok { $obj->deserialize(undef) } 'deserializing undef dies';
