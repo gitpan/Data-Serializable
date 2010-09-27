@@ -1,33 +1,29 @@
 ---
-abstract: 'Moose-based role that adds serialization support to any class'
+abstract: 'Moose role that adds serialization support to any class'
 author:
   - 'Robin Smidsrød <robin@smidsrod.no>'
 build_requires:
   Data::Serializer::JSON: 0
-  ExtUtils::MakeMaker: 6.42
+  English: 0
   JSON: 0
   Moose: 0
+  Test::Exception: 0
   Test::More: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
-distribution_type: module
-generated_by: 'Module::Install version 0.95'
+  ExtUtils::MakeMaker: 6.31
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.102341, CPAN::Meta::Converter version 2.102400'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Data-Serializable
-no_index:
-  directory:
-    - inc
-    - t
 requires:
   Carp: 0
   Class::MOP: 0
   Moose::Role: 0
   Storable: 0
-  namespace::autoclean: 0
-  perl: 5.6.0
+  perl: 5.006
 resources:
-  license: http://dev.perl.org/licenses/
-version: 0.03
+  repository: git://github.com/robinsmidsrod/Data-Serializable.git
+version: 0.40.0

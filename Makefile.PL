@@ -1,20 +1,61 @@
-use inc::Module::Install 0.95;
 
-name     'Data-Serializable';
-author   'Robin Smidsrød <robin@smidsrod.no>';
-license  'perl';
-all_from 'lib/Data/Serializable.pm';
+use strict;
+use warnings;
 
-requires 'Carp'                 => 0;
-requires 'Class::MOP'           => 0;
-requires 'Moose::Role'          => 0;
-requires 'Storable'             => 0;
-requires 'namespace::autoclean' => 0;
+BEGIN { require 5.006; }
 
-test_requires 'Test::More'      => 0;
-test_requires 'JSON'            => 0;
-test_requires 'Data::Serializer::JSON' => 0;
-test_requires 'Moose'           => 0;
+use ExtUtils::MakeMaker 6.31;
 
-WriteAll;
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Moose role that adds serialization support to any class',
+  'AUTHOR' => 'Robin Smidsrød <robin@smidsrod.no>',
+  'BUILD_REQUIRES' => {
+    'Data::Serializer::JSON' => '0',
+    'English' => '0',
+    'JSON' => '0',
+    'Moose' => '0',
+    'Test::Exception' => '0',
+    'Test::More' => '0'
+  },
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'Data-Serializable',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'Data::Serializable',
+  'PREREQ_PM' => {
+    'Carp' => '0',
+    'Class::MOP' => '0',
+    'Moose::Role' => '0',
+    'Storable' => '0'
+  },
+  'VERSION' => '0.40.0',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
+);
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
 

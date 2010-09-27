@@ -1,58 +1,20 @@
-package Data::Serializable;
+use strict;
+use warnings;
 
+package Data::Serializable;
+BEGIN {
+  $Data::Serializable::VERSION = '0.40.0';
+}
+use Moose::Role;
 use 5.006; # Found with Perl::MinimumVersion
 
-use Moose::Role;
+# ABSTRACT: Moose role that adds serialization support to any class
 
 use Class::MOP ();
 use Carp qw(croak confess);
 
-use namespace::autoclean -also => [
-    '_wrap_invalid',
-    '_unwrap_invalid',
-    '_build_serializer',
-    '_build_deserializer',
-];
-
-=encoding utf8
-
-=head1 NAME
-
-Data::Serializable - Moose-based role that adds serialization support to any class
-
-=head1 VERSION
-
-Version 0.02
-
-=cut
-
-our $VERSION = '0.03';
-
-=head1 SYNOPSIS
-
-    package MyClass;
-    use Moose;
-    with 'Data::Serializable';
-    
-    package main;
-    my $obj = MyClass->new( serializer_module => 'JSON' );
-    my $json = $obj->serialize( "Foo" );
-    ...
-    my $str = $obj->deserialize( $json );
-
-=head1 DESCRIPTION
-
-A Moose-based role that enables the consumer to easily serialize/deserialize data structures.
-The default serializer is L<Storable>, but any serializer in the L<Data::Serializer> hierarchy can
-be used automatically. You can even install your own custom serializer if the pre-defined ones
-are not useful for you.
-
-=head1 EXPORT
-
-This is a Moose-based role. It doesn't export anything to normal perl modules.
-
-=cut
-
+# Wrap data structure that is not a hash-ref
+# FIXME: Technically we should allow array-ref, as JSON standard allows it
 sub _wrap_invalid {
     my ($module, $obj) = @_;
     if ( $module eq 'Data::Serializer::JSON' ) {
@@ -61,6 +23,7 @@ sub _wrap_invalid {
     return $obj;
 }
 
+# Unwrap JSON previously wrapped with _wrap_invalid()
 sub _unwrap_invalid {
     my ($module, $obj) = @_;
     if ( $module eq 'Data::Serializer::JSON' ) {
@@ -72,18 +35,6 @@ sub _unwrap_invalid {
     return $obj;
 }
 
-=head1 ATTRIBUTES
-
-=cut
-
-=head2 throws_exception
-
-Defines if methods should throw exceptions or return undef. Default is to throw exceptions.
-Override default value like this:
-
-    has '+throws_expection' => ( default => 0 );
-
-=cut
 
 has 'throws_exception' => (
     is      => 'rw',
@@ -91,13 +42,6 @@ has 'throws_exception' => (
     default => 1,
 );
 
-=head2 serializer_module
-
-Name of a predefined module that you wish to use for serialization.
-Any submodule of L<Data::Serializer> is automatically supported.
-The built-in support for L<Storable> doesn't require L<Data::Serializer>.
-
-=cut
 
 has "serializer_module" => (
     is      => 'rw',
@@ -105,13 +49,6 @@ has "serializer_module" => (
     default => 'Storable',
 );
 
-=head2 serializer
-
-If none of the predefined serializers work for you, you can install your own.
-This should be a code reference that takes one argument (the message to encode)
-and returns a scalar back to the caller with the serialized data.
-
-=cut
 
 has "serializer" => (
     is      => 'rw',
@@ -121,7 +58,7 @@ has "serializer" => (
 );
 
 # Default serializer uses Storable
-sub _build_serializer {
+sub _build_serializer { ## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
     my ($self) = @_;
 
     # Figure out full package name of serializer
@@ -153,11 +90,6 @@ sub _build_serializer {
     confess("Unsupported serializer specified");
 }
 
-=head2 deserializer
-
-Same as serializer, but to decode the data.
-
-=cut
 
 has "deserializer" => (
     is      => 'rw',
@@ -167,7 +99,7 @@ has "deserializer" => (
 );
 
 # Default deserializer uses Storable
-sub _build_deserializer {
+sub _build_deserializer { ## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
     my ($self) = @_;
 
     # Figure out full package name of serializer
@@ -182,7 +114,7 @@ sub _build_deserializer {
     # Just return sub if using default
     if ( $module eq 'Storable' ) {
         return sub {
-            return undef if @_ > 0 and not defined( $_[0] );
+            return if @_ > 0 and not defined( $_[0] );
             return ${ Storable::thaw( $_[0] ) };
         };
     }
@@ -190,7 +122,7 @@ sub _build_deserializer {
     # Return the specified serializer if we know about it
     if ( $module->can('deserialize') ) {
         return sub {
-            return undef if @_ > 0 and not defined( $_[0] );
+            return if @_ > 0 and not defined( $_[0] );
             # Data::Serializer::* has a static method called deserialize()
             return _unwrap_invalid(
                 $module, $module->deserialize( $_[0] )
@@ -201,13 +133,6 @@ sub _build_deserializer {
     confess("Unsupported deserializer specified");
 }
 
-=head1 METHODS
-
-=head2 serialize($message)
-
-Runs the serializer on the specified argument.
-
-=cut
 
 sub serialize {
     my ($self,$message) = @_;
@@ -222,11 +147,6 @@ sub serialize {
     return $serialized;
 }
 
-=head2 deserialize($message)
-
-Runs the deserializer on the specified argument.
-
-=cut
 
 sub deserialize {
     my ($self,$message)=@_;
@@ -241,60 +161,183 @@ sub deserialize {
     return $deserialized;
 }
 
-=head1 AUTHOR
-
-Robin Smidsrød, C<< <robin at smidsrod.no> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-data-serializable at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Serializable>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+no Moose::Role;
+1;
 
 
 
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+Data::Serializable - Moose role that adds serialization support to any class
+
+=head1 VERSION
+
+version 0.40.0
+
+=head1 SYNOPSIS
+
+    package MyClass;
+    use Moose;
+    with 'Data::Serializable';
+    no Moose;
+
+    package main;
+    my $obj = MyClass->new( serializer_module => 'JSON' );
+    my $json = $obj->serialize( "Foo" );
+    ...
+    my $str = $obj->deserialize( $json );
+
+=head1 DESCRIPTION
+
+A Moose-based role that enables the consumer to easily serialize/deserialize data structures.
+The default serializer is L<Storable>, but any serializer in the L<Data::Serializer> hierarchy can
+be used automatically. You can even install your own custom serializer if the pre-defined ones
+are not useful for you.
+
+=head1 ATTRIBUTES
+
+=head2 throws_exception
+
+Defines if methods should throw exceptions or return undef. Default is to throw exceptions.
+Override default value like this:
+
+    has '+throws_expection' => ( default => 0 );
+
+=head2 serializer_module
+
+Name of a predefined module that you wish to use for serialization.
+Any submodule of L<Data::Serializer> is automatically supported.
+The built-in support for L<Storable> doesn't require L<Data::Serializer>.
+
+=head2 serializer
+
+If none of the predefined serializers work for you, you can install your own.
+This should be a code reference that takes one argument (the message to encode)
+and returns a scalar back to the caller with the serialized data.
+
+=head2 deserializer
+
+Same as serializer, but to decode the data.
+
+=head1 METHODS
+
+=head2 serialize($message)
+
+Runs the serializer on the specified argument.
+
+=head2 deserialize($message)
+
+Runs the deserializer on the specified argument.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item *
+
+L<Moose::Manual::Roles>
+
+=item *
+
+L<Data::Serializer>
+
+=back
+
+=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Data::Serializable
+  perldoc Data::Serializable
 
-
-You can also look for information at:
+=head2 Websites
 
 =over 4
 
-=item * RT: CPAN's request tracker
+=item *
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable>
+Search CPAN
 
-=item * AnnoCPAN: Annotated CPAN documentation
+L<http://search.cpan.org/dist/Data-Serializable>
+
+=item *
+
+AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Data-Serializable>
 
-=item * CPAN Ratings
+=item *
+
+CPAN Ratings
 
 L<http://cpanratings.perl.org/d/Data-Serializable>
 
-=item * Search CPAN
+=item *
 
-L<http://search.cpan.org/dist/Data-Serializable/>
+CPAN Forum
+
+L<http://cpanforum.com/dist/Data-Serializable>
+
+=item *
+
+RT: CPAN's Bug Tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable>
+
+=item *
+
+CPANTS Kwalitee
+
+L<http://cpants.perl.org/dist/overview/Data-Serializable>
+
+=item *
+
+CPAN Testers Results
+
+L<http://cpantesters.org/distro/D/Data-Serializable.html>
+
+=item *
+
+CPAN Testers Matrix
+
+L<http://matrix.cpantesters.org/?dist=Data-Serializable>
+
+=item *
+
+Source Code Repository
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+L<git://github.com/robinsmidsrod/Data-Serializable.git>
 
 =back
 
+=head2 Bugs
 
-=head1 COPYRIGHT & LICENSE
+Please report any bugs or feature requests to C<bug-data-serializable at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Serializable>.  I will be
+notified, and then you'll automatically be notified of progress on your bug as I make changes.
 
-Copyright 2009 Robin Smidsrød
+=head1 AUTHOR
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+Robin Smidsrød <robin@smidsrod.no>
 
-=head1 SEE ALSO
+=head1 COPYRIGHT AND LICENSE
 
-L<Moose::Manual::Roles>, L<Data::Serializer>
+This software is copyright (c) 2010 by Robin Smidsrød.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
 
-1; # End of Data::Serializable
+
+__END__
+

@@ -1,45 +1,122 @@
-Data-Serializable 0.01
+NAME
+    Data::Serializable - Moose role that adds serialization support to any
+    class
 
-A Moose-based role that enables the consumer to easily serialize/deserialize data structures.
-The default serializer is L<Storable>, but any serializer in the L<Data::Serializer> hierarchy can
-be used automatically. You can even install your own custom serializer if the pre-defined ones
-are not useful for you.
+VERSION
+    version 0.40.0
 
-INSTALLATION
+SYNOPSIS
+        package MyClass;
+        use Moose;
+        with 'Data::Serializable';
+        no Moose;
 
-To install this module, run the following commands:
+        package main;
+        my $obj = MyClass->new( serializer_module => 'JSON' );
+        my $json = $obj->serialize( "Foo" );
+        ...
+        my $str = $obj->deserialize( $json );
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+DESCRIPTION
+    A Moose-based role that enables the consumer to easily
+    serialize/deserialize data structures. The default serializer is
+    Storable, but any serializer in the Data::Serializer hierarchy can be
+    used automatically. You can even install your own custom serializer if
+    the pre-defined ones are not useful for you.
 
-SUPPORT AND DOCUMENTATION
+ATTRIBUTES
+  throws_exception
+    Defines if methods should throw exceptions or return undef. Default is
+    to throw exceptions. Override default value like this:
 
-After installing, you can find documentation for this module with the
-perldoc command.
+        has '+throws_expection' => ( default => 0 );
 
-    perldoc Data::Serializable
+  serializer_module
+    Name of a predefined module that you wish to use for serialization. Any
+    submodule of Data::Serializer is automatically supported. The built-in
+    support for Storable doesn't require Data::Serializer.
 
-You can also look for information at:
+  serializer
+    If none of the predefined serializers work for you, you can install your
+    own. This should be a code reference that takes one argument (the
+    message to encode) and returns a scalar back to the caller with the
+    serialized data.
 
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable
+  deserializer
+    Same as serializer, but to decode the data.
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Data-Serializable
+METHODS
+  serialize($message)
+    Runs the serializer on the specified argument.
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Data-Serializable
+  deserialize($message)
+    Runs the deserializer on the specified argument.
 
-    Search CPAN
-        http://search.cpan.org/dist/Data-Serializable/
+SEE ALSO
+    *   Moose::Manual::Roles
 
+    *   Data::Serializer
 
-COPYRIGHT AND LICENCE
+SUPPORT
+    You can find documentation for this module with the perldoc command.
 
-Copyright (C) 2009 Robin Smidsrød
+      perldoc Data::Serializable
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+  Websites
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Data-Serializable>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/Data-Serializable>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/Data-Serializable>
+
+    *   CPAN Forum
+
+        <http://cpanforum.com/dist/Data-Serializable>
+
+    *   RT: CPAN's Bug Tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable>
+
+    *   CPANTS Kwalitee
+
+        <http://cpants.perl.org/dist/overview/Data-Serializable>
+
+    *   CPAN Testers Results
+
+        <http://cpantesters.org/distro/D/Data-Serializable.html>
+
+    *   CPAN Testers Matrix
+
+        <http://matrix.cpantesters.org/?dist=Data-Serializable>
+
+    *   Source Code Repository
+
+        The code is open to the world, and available for you to hack on.
+        Please feel free to browse it and play with it, or whatever. If you
+        want to contribute patches, please send me a diff or prod me to pull
+        from your repository :)
+
+        <git://github.com/robinsmidsrod/Data-Serializable.git>
+
+  Bugs
+    Please report any bugs or feature requests to "bug-data-serializable at
+    rt.cpan.org", or through the web interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Serializable>. I
+    will be notified, and then you'll automatically be notified of progress
+    on your bug as I make changes.
+
+AUTHOR
+    Robin Smidsrød <robin@smidsrod.no>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2010 by Robin Smidsrød.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 

@@ -1,0 +1,40 @@
+Defines if methods should throw exceptions or return undef. Default is to throw exceptions.
+Override default value like this:
+
+    has '+throws_expection' => ( default => 0 );
+
+Name of a predefined module that you wish to use for serialization.
+Any submodule of [Data::Serializer](http://search.cpan.org/perldoc?Data::Serializer) is automatically supported.
+The built-in support for [Storable](http://search.cpan.org/perldoc?Storable) doesn't require [Data::Serializer](http://search.cpan.org/perldoc?Data::Serializer).
+
+If none of the predefined serializers work for you, you can install your own.
+This should be a code reference that takes one argument (the message to encode)
+and returns a scalar back to the caller with the serialized data.
+
+Same as serializer, but to decode the data.
+
+Runs the serializer on the specified argument.
+
+Runs the deserializer on the specified argument.
+
+# SYNOPSIS
+
+    package MyClass;
+    use Moose;
+    with 'Data::Serializable';
+    no Moose;
+
+    package main;
+    my $obj = MyClass->new( serializer_module => 'JSON' );
+    my $json = $obj->serialize( "Foo" );
+    ...
+    my $str = $obj->deserialize( $json );
+
+# DESCRIPTION
+
+A Moose-based role that enables the consumer to easily serialize/deserialize data structures.
+The default serializer is [Storable](http://search.cpan.org/perldoc?Storable), but any serializer in the [Data::Serializer](http://search.cpan.org/perldoc?Data::Serializer) hierarchy can
+be used automatically. You can even install your own custom serializer if the pre-defined ones
+are not useful for you.
+
+# SEE ALSO

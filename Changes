@@ -1,5 +1,10 @@
 Revision history for Data-Serializable
 
+0.40.0    2010-09-27 17:40:33 Europe/Oslo
+	Migrated from Module::Install to Dist::Zilla
+	Now uses Semantic Versioning (http://semver.org/)
+	 - Hopefully 0.40.0 is equiv. to 0.04 (old-style)
+
 0.03	2010-04-14
 	Added minimum perl version (used Perl::MinimumVersion)
 	Updated to Module::Install 0.95
