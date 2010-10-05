@@ -13,11 +13,13 @@ my %WriteMakefileArgs = (
   'AUTHOR' => 'Robin Smidsrød <robin@smidsrod.no>',
   'BUILD_REQUIRES' => {
     'Data::Serializer::JSON' => '0',
+    'Data::Serializer::XML::Simple' => '0',
     'English' => '0',
     'JSON' => '0',
     'Moose' => '0',
     'Test::Exception' => '0',
-    'Test::More' => '0'
+    'Test::More' => '0',
+    'XML::Simple' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.31'
@@ -32,7 +34,7 @@ my %WriteMakefileArgs = (
     'Moose::Role' => '0',
     'Storable' => '0'
   },
-  'VERSION' => '0.40.0',
+  'VERSION' => '0.40.1',
   'test' => {
     'TESTS' => 't/*.t'
   }

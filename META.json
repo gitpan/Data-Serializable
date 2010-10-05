@@ -17,7 +17,9 @@
       "build" : {
          "requires" : {
             "Data::Serializer::JSON" : 0,
-            "JSON" : 0
+            "Data::Serializer::XML::Simple" : 0,
+            "JSON" : 0,
+            "XML::Simple" : 0
          }
       },
       "configure" : {
@@ -51,6 +53,6 @@
          "web" : "http://github.com/robinsmidsrod/Data-Serializable"
       }
    },
-   "version" : "0.40.0"
+   "version" : "0.40.1"
 }
 

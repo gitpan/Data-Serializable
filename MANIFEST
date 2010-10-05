@@ -14,7 +14,9 @@ t/10-example_1.t
 t/20-visibility.t
 t/30-convert_default.t
 t/31-convert_json.t
+t/32-convert_xml.t
 t/author-critic.t
+t/release-eol.t
 t/release-kwalitee.t
 t/release-no-tabs.t
 t/release-pod-coverage.t
