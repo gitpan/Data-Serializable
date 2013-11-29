@@ -6,9 +6,9 @@ META.json
 META.yml
 Makefile.PL
 README
-README.mkdn
 dist.ini
 lib/Data/Serializable.pm
+perlcritic.rc
 t/00-load.t
 t/10-example_1.t
 t/20-visibility.t

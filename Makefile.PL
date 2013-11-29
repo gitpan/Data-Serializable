@@ -2,41 +2,39 @@
 use strict;
 use warnings;
 
-BEGIN { require 5.006; }
+use 5.006;
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Moose role that adds serialization support to any class',
-  'AUTHOR' => 'Robin Smidsrød <robin@smidsrod.no>',
-  'BUILD_REQUIRES' => {
-    'Data::Serializer::JSON' => '0',
-    'Data::Serializer::XML::Simple' => '0',
-    'English' => '0',
-    'JSON' => '0',
-    'Moose' => '0',
-    'Test::Exception' => '0',
-    'Test::More' => '0',
-    'XML::Simple' => '0'
+  "ABSTRACT" => "Moose role that adds serialization support to any class",
+  "AUTHOR" => "Robin Smidsr\303\270d <robin\@smidsrod.no>",
+  "BUILD_REQUIRES" => {
+    "JSON" => 0,
+    "Moose" => 0,
+    "Test::Exception" => 0,
+    "Test::More" => 0
   },
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
   },
-  'DISTNAME' => 'Data-Serializable',
-  'EXE_FILES' => [],
-  'LICENSE' => 'perl',
-  'NAME' => 'Data::Serializable',
-  'PREREQ_PM' => {
-    'Carp' => '0',
-    'Class::MOP' => '0',
-    'Moose::Role' => '0',
-    'Storable' => '0'
+  "DISTNAME" => "Data-Serializable",
+  "EXE_FILES" => [],
+  "LICENSE" => "perl",
+  "NAME" => "Data::Serializable",
+  "PREREQ_PM" => {
+    "Carp" => 0,
+    "Module::Runtime" => 0,
+    "Moose::Role" => 0,
+    "Storable" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
-  'VERSION' => '0.40.1',
-  'test' => {
-    'TESTS' => 't/*.t'
+  "VERSION" => "0.41.0",
+  "test" => {
+    "TESTS" => "t/*.t"
   }
 );
 

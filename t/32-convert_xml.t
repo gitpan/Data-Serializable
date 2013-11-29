@@ -3,8 +3,23 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use Test::Exception;
+
+use Module::Runtime ();
+eval { Module::Runtime::require_module("Data::Serializer") };
+plan( skip_all => "Please install Data::Serializer" )
+    if $@;
+
+eval { Module::Runtime::require_module("XML::Simple") };
+plan( skip_all => "Please install XML::Simple" )
+    if $@;
+
+plan( skip_all => "Please install XML::SAX or XML::Parser" )
+    unless eval { Module::Runtime::require_module("XML::SAX") }
+        or eval { Module::Runtime::require_module("XML::Parser") };
+
+plan( tests => 6 );
 
 package MyClass;
 use Moose;

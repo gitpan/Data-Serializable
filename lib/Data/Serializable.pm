@@ -3,14 +3,14 @@ use warnings;
 use 5.006; # Found with Perl::MinimumVersion
 
 package Data::Serializable;
-BEGIN {
-  $Data::Serializable::VERSION = '0.40.1';
+{
+  $Data::Serializable::VERSION = '0.41.0';
 }
 use Moose::Role;
 
 # ABSTRACT: Moose role that adds serialization support to any class
 
-use Class::MOP ();
+use Module::Runtime ();
 use Carp qw(croak confess);
 
 # Wrap data structure that is not a hash-ref
@@ -88,7 +88,7 @@ sub _build_serializer { ## no critic qw(Subroutines::ProhibitUnusedPrivateSubrou
     }
 
     # Make sure serializer module is loaded
-    Class::MOP::load_class( $module );
+    Module::Runtime::require_module( $module );
 
     # Just return sub if using default
     if ( $module eq 'Storable' ) {
@@ -134,7 +134,7 @@ sub _build_deserializer { ## no critic qw(Subroutines::ProhibitUnusedPrivateSubr
     }
 
     # Make sure serializer module is loaded
-    Class::MOP::load_class( $module );
+    Module::Runtime::require_module( $module );
 
     # Just return sub if using default
     if ( $module eq 'Storable' ) {
@@ -194,7 +194,7 @@ sub deserialize {
 no Moose::Role;
 1;
 
-
+__END__
 
 =pod
 
@@ -206,7 +206,7 @@ Data::Serializable - Moose role that adds serialization support to any class
 
 =head1 VERSION
 
-version 0.40.1
+version 0.41.0
 
 =head1 SYNOPSIS
 
@@ -277,9 +277,11 @@ L<Data::Serializer>
 
 =back
 
-=for :stopwords CPAN AnnoCPAN RT CPANTS Kwalitee diff
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
 
 =head1 SUPPORT
+
+=head2 Perldoc
 
 You can find documentation for this module with the perldoc command.
 
@@ -287,17 +289,40 @@ You can find documentation for this module with the perldoc command.
 
 =head2 Websites
 
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
+
 =over 4
+
+=item *
+
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+L<http://metacpan.org/release/Data-Serializable>
 
 =item *
 
 Search CPAN
 
+The default CPAN search engine, useful to view POD in HTML format.
+
 L<http://search.cpan.org/dist/Data-Serializable>
 
 =item *
 
-AnnoCPAN: Annotated CPAN documentation
+RT: CPAN's Bug Tracker
+
+The RT ( Request Tracker ) website is the default bug/issue tracking system for CPAN.
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable>
+
+=item *
+
+AnnoCPAN
+
+The AnnoCPAN is a website that allows community annotations of Perl module documentation.
 
 L<http://annocpan.org/dist/Data-Serializable>
 
@@ -305,55 +330,67 @@ L<http://annocpan.org/dist/Data-Serializable>
 
 CPAN Ratings
 
+The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
+
 L<http://cpanratings.perl.org/d/Data-Serializable>
 
 =item *
 
 CPAN Forum
 
+The CPAN Forum is a web forum for discussing Perl modules.
+
 L<http://cpanforum.com/dist/Data-Serializable>
 
 =item *
 
-RT: CPAN's Bug Tracker
+CPANTS
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Serializable>
-
-=item *
-
-CPANTS Kwalitee
+The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
 
 L<http://cpants.perl.org/dist/overview/Data-Serializable>
 
 =item *
 
-CPAN Testers Results
+CPAN Testers
 
-L<http://cpantesters.org/distro/D/Data-Serializable.html>
+The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
+
+L<http://www.cpantesters.org/distro/D/Data-Serializable>
 
 =item *
 
 CPAN Testers Matrix
 
+The CPAN Testers Matrix is a website that provides a visual overview of the test results for a distribution on various Perls/platforms.
+
 L<http://matrix.cpantesters.org/?dist=Data-Serializable>
 
 =item *
 
-Source Code Repository
+CPAN Testers Dependencies
+
+The CPAN Testers Dependencies is a website that shows a chart of the test results of all dependencies for a distribution.
+
+L<http://deps.cpantesters.org/?module=Data::Serializable>
+
+=back
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests by email to C<bug-data-serializable at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Serializable>. You will be automatically notified of any
+progress on the request by the system.
+
+=head2 Source Code
 
 The code is open to the world, and available for you to hack on. Please feel free to browse it and play
 with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
 from your repository :)
 
-L<git://github.com/robinsmidsrod/Data-Serializable.git>
+L<http://github.com/robinsmidsrod/Data-Serializable>
 
-=back
-
-=head2 Bugs
-
-Please report any bugs or feature requests to C<bug-data-serializable at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Serializable>.  I will be
-notified, and then you'll automatically be notified of progress on your bug as I make changes.
+  git clone git://github.com/robinsmidsrod/Data-Serializable.git
 
 =head1 AUTHOR
 
@@ -361,13 +398,9 @@ Robin Smidsrød <robin@smidsrod.no>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Robin Smidsrød.
+This software is copyright (c) 2013 by Robin Smidsrød.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

@@ -1,5 +1,10 @@
 Revision history for Data-Serializable
 
+0.41.0    2013-11-29 10:47:44 Europe/Oslo
+    Fix for RT#90958 (reported by Upasana Shukla)
+        - Class::MOP::load_class() is deprecated. Replaced with
+          Module::Runtime::require_module().
+
 0.40.1    2010-10-05 13:15:30 Europe/Oslo
 	Fix for RT#61885 (reported by Kaare Rasmussen)
          - XML::Simple serializer didn't work at all.

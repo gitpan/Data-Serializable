@@ -2,7 +2,14 @@
 
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
+
+use Module::Runtime ();
+eval { Module::Runtime::require_module("Data::Serializer") };
+plan( skip_all => "Please install Data::Serializer" )
+    if $@;
+
+plan( tests => 2 );
 
 package MyClass;
 use Moose;
